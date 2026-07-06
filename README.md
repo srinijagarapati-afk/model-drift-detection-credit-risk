@@ -1,4 +1,15 @@
-# Model Drift Detection in Credit Risk
+## 📊 Results
+
+- PSI detects distribution shifts in feature distributions
+- KS test validates statistical differences between datasets
+- 5/5 unit tests passing ensuring correctness of drift logic
+
+## ▶️ How to Run
+
+```bash
+pip install -r requirements.txt
+python src/main.py
+pytest tests/# Model Drift Detection in Credit Risk
 
 ## Overview
 
