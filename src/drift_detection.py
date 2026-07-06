@@ -1,16 +1,9 @@
 import numpy as np
+import pandas as pd
 from scipy.stats import ks_2samp
 
 
 def population_stability_index(expected: np.ndarray, actual: np.ndarray, bins: int = 10) -> float:
-    """
-    Calculate PSI between a baseline (expected) distribution and a new (actual) distribution.
-
-    PSI interpretation:
-    - < 0.1   : no significant drift
-    - 0.1-0.25: moderate drift
-    - > 0.25  : significant drift
-    """
     breakpoints = np.linspace(0, 100, bins + 1)
     bucket_edges = np.percentile(expected, breakpoints)
     bucket_edges[0] = -np.inf
@@ -29,18 +22,40 @@ def population_stability_index(expected: np.ndarray, actual: np.ndarray, bins: i
     return psi
 
 
-def kolmogorov_smirnov_test(expected, actual):
-    """
-    KS test to detect distribution difference
-    """
-    stat, p_value = ks_2samp(expected, actual)
-    return stat, p_value
-
-
-def psi_status(psi):
+def psi_status(psi: float) -> str:
     if psi < 0.1:
         return "No significant drift"
     elif psi < 0.25:
         return "Moderate drift"
     else:
         return "Significant drift detected"
+
+
+def ks_test_drift(baseline: np.ndarray, current: np.ndarray, alpha: float = 0.05) -> dict:
+    stat, p_value = ks_2samp(baseline, current)
+    return {
+        "ks_statistic": stat,
+        "p_value": p_value,
+        "drift_detected": bool(p_value < alpha),
+    }
+
+
+def check_feature_drift(baseline_df: pd.DataFrame, current_df: pd.DataFrame, features: list, psi_threshold: float = 0.25, alpha: float = 0.05) -> pd.DataFrame:
+    rows = []
+    for feature in features:
+        baseline_values = baseline_df[feature].values
+        current_values = current_df[feature].values
+
+        psi = population_stability_index(baseline_values, current_values)
+        ks_result = ks_test_drift(baseline_values, current_values, alpha=alpha)
+
+        rows.append({
+            "feature": feature,
+            "psi": psi,
+            "psi_flag": psi > psi_threshold,
+            "ks_statistic": ks_result["ks_statistic"],
+            "ks_p_value": ks_result["p_value"],
+            "ks_drift_detected": ks_result["drift_detected"],
+        })
+
+    return pd.DataFrame(rows)
