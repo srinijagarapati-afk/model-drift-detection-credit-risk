@@ -1,2 +1,49 @@
-# model-drift-detection-credit-risk
-End-to-end ML pipeline for credit risk prediction, model drift detection, explainable AI, fairness analysis, and Flask API deployment
+# Model Drift Detection in Credit Risk
+
+## Overview
+
+This project monitors deployed machine learning models for credit risk prediction and detects model drift using statistical techniques.
+
+## Features
+
+- Population Stability Index (PSI)
+- Kolmogorov-Smirnov (KS) Drift Detection
+- Automated Drift Monitoring
+- Risk Assessment
+- Modular Python Architecture
+
+## Project Structure
+
+```
+model-drift-detection-credit-risk/
+│
+├── notebooks/
+├── src/
+├── tests/
+├── requirements.txt
+└── README.md
+```
+
+## Technologies Used
+
+- Python
+- Pandas
+- NumPy
+- SciPy
+- Scikit-learn
+- Jupyter Notebook
+
+## Business Value
+
+Model drift can reduce prediction quality over time. This project helps identify changes in incoming data distributions and supports proactive model monitoring in credit risk environments.
+
+## Future Improvements
+
+- Real-time monitoring dashboard
+- Automated alerts
+- Model retraining pipeline
+- Cloud deployment
+
+## Author
+
+Srinija Garapati
